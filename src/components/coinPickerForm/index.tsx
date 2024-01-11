@@ -1,10 +1,7 @@
 import styled from "styled-components";
 import CoinPickerMenu from "../coinPickerMenu";
-
-const bgColor = "#eef4fa";
-const borderColor = "#eef4fa";
-const textColor = "#424961";
-const secondColor = "#789";
+import {bgColor, borderColor, secondTextColor, textColor} from "../colors";
+import {CoinData} from "@/types"
 
 const InputForm = styled.div`
   display: flex;
@@ -20,6 +17,9 @@ const InputForm = styled.div`
   height: auto;
   align-items: flex-start;
   gap: 0px;
+  width: -webkit-fill-available;
+  @media (max-width: 1200px) {
+  }
 `;
 const RateBlock = styled.div`
   width: 100%;
@@ -39,6 +39,7 @@ const Input = styled.input`
   line-height: 1;
   background: none;
   border: none;
+  outline: none;
   font-family: "Noto Sans";
   font-style: normal;
   font-weight: 600;
@@ -50,65 +51,107 @@ const Input = styled.input`
 
 const P = styled.p`
   font-size: 14px;
-  color: ${secondColor};
+  color: ${secondTextColor};
   margin: 6px 0px 0px;
   white-space: nowrap;
 `;
 
-const CoinsMenu = styled.menu``;
-
-export type CoinData = {
-  category: string;
-  circulatingSupply: number;
-  id: number;
-  lastUpdated: string;
-  maxSupply: number;
-  name: string;
-  rank: number;
-  slug: string;
-  symbol: string;
-  tokens: any[];
-  totalSupply: number;
-  type: string;
-  values: {
-    [key: string]: {
-      high24h: number;
-      low24h: number;
-      marketCap: number;
-      percentChange3m: number;
-      percentChange6m: number;
-      percentChange7d: number;
-      percentChange24h: number;
-      percentChange30d: number;
-      price: number;
-      volume24h: number;
-    };
-  };
-  volume24hBase: number;
-};
-
 type CoinPickerProps = {
-  coin: CoinData;
+  coinFrom: CoinData;
+  coinTo: CoinData;
+  enteredRate: string | number;
+  setEnteredRate?: (value: string | number) => void;
+  data: CoinData[];
+  changeCoinHandler: (slug: string) => void;
 };
 
-export default function CoinPickerForm({coin}: CoinPickerProps): JSX.Element {
-  const getRate = (coin: CoinData) => {
+export default function CoinPickerForm({
+  coinFrom,
+  coinTo,
+  data,
+  enteredRate,
+  changeCoinHandler,
+  setEnteredRate,
+}: CoinPickerProps): JSX.Element {
+  const getRate = () => {
     const {
-      symbol,
+      symbol: symbolFrom,
       values: {
-        USD: {price},
+        USD: {price: priceFrom},
       },
-    } = coin;
-    return `1 ${symbol} = $ ${price.toFixed(2)}`;
+    } = coinFrom;
+
+    const {
+      symbol: symbolTo,
+      values: {
+        USD: {price: priceTo},
+      },
+    } = coinTo;
+    const price = priceFrom / priceTo;
+    const fixedPrice = price < 1 ? price.toFixed(7) : price.toFixed(3);
+    return `1 ${symbolFrom} = ${symbolTo} ${fixedPrice}`;
+  };
+
+  const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: {value},
+    } = e;
+    /*
+      Проверяю ввденое значение на корректность.
+      Если оно не конвертируется в число то заменяем значение на 0.
+      Если в введеном значение есть точка то осталяем ее в инпуте.
+      Подсчитываю количество сплитов строки по точкам, чтобы исключить случаи когда точек больше 1.
+    */
+    const dotsLength = value.split(".").length;
+    if (value[value.length - 1] !== "." || dotsLength > 2) {
+      setEnteredRate!(+value ? +value : 0);
+    } else {
+      setEnteredRate!(value);
+    }
+  };
+
+  const getConvertedRate = (rate: number): JSX.Element => {
+    const {
+      symbol: symbolFrom,
+      values: {
+        USD: {price: priceFrom},
+      },
+    } = coinFrom;
+
+    const {
+      values: {
+        USD: {price: priceTo},
+      },
+    } = coinTo;
+
+    const convertedRate = (rate * priceTo) / priceFrom;
+
+    return (
+      <>
+        <b>{symbolFrom}</b> {convertedRate}
+      </>
+    );
   };
 
   return (
     <InputForm>
       <RateBlock>
-        <Input placeholder="0" type="number" />
-        <P style={{whiteSpace: "nowrap"}}>{getRate(coin)}</P>
+        {setEnteredRate ? (
+          <Input
+            value={enteredRate}
+            placeholder="0"
+            onChange={inputChangeHandler}
+          />
+        ) : (
+          <div>{getConvertedRate(+enteredRate)}</div>
+        )}
+        <P style={{whiteSpace: "nowrap"}}>{getRate()}</P>
       </RateBlock>
-      <CoinPickerMenu coin={coin} />
+      <CoinPickerMenu
+        coin={coinFrom}
+        data={data}
+        changeCoinHandler={changeCoinHandler}
+      />
     </InputForm>
   );
 }
