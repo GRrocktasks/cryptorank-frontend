@@ -40,7 +40,6 @@ const Input = styled.input`
   background: none;
   border: none;
   outline: none;
-  font-family: "Noto Sans";
   font-style: normal;
   font-weight: 600;
   padding: 0px;

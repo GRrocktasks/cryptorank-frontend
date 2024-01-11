@@ -2,8 +2,6 @@ import {SWRConfig} from "swr";
 import App, {type AppProps, type AppContext} from "next/app";
 import NavBar from "@/components/navBar";
 
-// import '../../styles/styles.global.css';
-
 export default function MyApp({Component, pageProps}: AppProps): JSX.Element {
   return (
     <SWRConfig

@@ -20,7 +20,6 @@ const Input = styled.input`
   line-height: 1;
   background: none;
   border: none;
-  font-family: "Noto Sans";
   font-style: normal;
   font-weight: 600;
   padding: 0px;

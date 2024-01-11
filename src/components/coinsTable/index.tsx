@@ -2,7 +2,7 @@ import {CoinData} from "@/types";
 import CoinsTableHeader from "../coinsTableHeader";
 import styled from "styled-components";
 import {formatValue, getHistoricPrice} from "../helpers";
-import TablePagination from "../tablePagination";
+import CoinsTablePagination from "../coinsTablePagination";
 import {useState} from "react";
 
 const Table = styled.table`
@@ -35,7 +35,7 @@ export default function CoinsTable({data}: {data: CoinData[]}): JSX.Element {
   ): JSX.Element[] =>
     data
       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-      .map((coin) => {
+      .map((coin, index) => {
         const {
           name,
           circulatingSupply,
@@ -53,7 +53,10 @@ export default function CoinsTable({data}: {data: CoinData[]}): JSX.Element {
           },
         } = coin;
         return (
-          <tr key={coin.slug}>
+          <tr
+            key={coin.slug}
+            style={{backgroundColor: index % 2 ? "#ebf0f3" : ""}}
+          >
             <td>{name}</td>
             <Td>{formatValue(price)}</Td>
             <Td>{formatValue(circulatingSupply)}</Td>
@@ -74,7 +77,7 @@ export default function CoinsTable({data}: {data: CoinData[]}): JSX.Element {
         <CoinsTableHeader />
         <tbody>{getRows(data, page, rowsPerPage)}</tbody>
       </Table>
-      <TablePagination
+      <CoinsTablePagination
         rowsPerPageOptions={[5, 10, 25, 50]}
         count={data.length}
         rowsPerPage={rowsPerPage}

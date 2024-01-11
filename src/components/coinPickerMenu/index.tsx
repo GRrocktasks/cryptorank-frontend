@@ -34,7 +34,6 @@ const MenuContainer = styled.div`
 `;
 
 const MenuHeader = styled.h6`
-  font-family: Noto Sans;
   margin: 0px;
   font-size: 16px;
   font-style: normal;

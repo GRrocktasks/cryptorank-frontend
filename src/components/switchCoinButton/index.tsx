@@ -17,9 +17,7 @@ const Button = styled.button`
   align-items: center;
   white-space: nowrap;
   cursor: pointer;
-  transition: all 0.2s ease 0s;
   user-select: none;
-  font-family: "Noto Sans";
   gap: 8px;
   font-size: 16px;
   font-weight: 500;
