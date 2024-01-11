@@ -14,7 +14,7 @@ const ConverterWrapper = styled.div`
 `;
 
 type Props = {
-  data: CoinData[];
+  data: CoinData[] | undefined;
 };
 
 const getCoinBySlug = (data: CoinData[], slug: string) => {
@@ -30,19 +30,22 @@ export default function Converter({data}: Props): JSX.Element {
    Задаются первоначальные значения для конвертации валют.
   */
   useEffect(() => {
-    const bitcoin = getCoinBySlug(data, "bitcoin");
-    const usd = getCoinBySlug(data, "usdd");
-    setCoinFrom(bitcoin);
-    setCoinTo(usd);
+    if (data) {
+      const firstCoin = data[0];
+      const secondCoin = data[1];
+
+      setCoinFrom(firstCoin);
+      setCoinTo(secondCoin);
+    }
   }, [data]);
 
   const changeCoinFromHandler = (slug: string) => {
-    const coin = getCoinBySlug(data, slug);
+    const coin = getCoinBySlug(data!, slug);
     setCoinFrom(coin);
   };
 
   const changeCoinToHandler = (slug: string) => {
-    const coin = getCoinBySlug(data, slug);
+    const coin = getCoinBySlug(data!, slug);
     setCoinTo(coin);
   };
 

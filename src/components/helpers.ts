@@ -21,7 +21,6 @@ export const getHistoricPrice = (
  * @returns Возвращает строку представляющую число с фиксированным количеством знаков после точки.
  */
 export const fixDecimalsPart = (value: number, length: number) => {
-
   const dot = length ? "." : "";
 
   if (`${value}`.includes(".")) {
@@ -33,9 +32,7 @@ export const fixDecimalsPart = (value: number, length: number) => {
       .split(".");
 
     // Удаляю из целой части запятые и обрезаю количество символов после точки.
-    console.log(
-      `${wholePart.replaceAll(",", "")}${dot}${floatPart.substring(0, length)}`
-    );
+
     return `${wholePart.replaceAll(",", "")}${dot}${floatPart.substring(
       0,
       length
