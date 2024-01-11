@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import CoinPickerMenu from "../coinPickerMenu";
 import {bgColor, borderColor, secondTextColor, textColor} from "../colors";
-import {CoinData} from "@/types"
+import {CoinData} from "@/types";
+import {fixDecimalsPart} from "../helpers";
 
 const InputForm = styled.div`
   display: flex;
@@ -87,7 +88,8 @@ export default function CoinPickerForm({
       },
     } = coinTo;
     const price = priceFrom / priceTo;
-    const fixedPrice = price < 1 ? price.toFixed(7) : price.toFixed(3);
+    const fixedPrice =
+      price < 1 ? fixDecimalsPart(price, 7) : fixDecimalsPart(price, 3);
     return `1 ${symbolFrom} = ${symbolTo} ${fixedPrice}`;
   };
 

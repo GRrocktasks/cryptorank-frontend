@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { secondTextColor, textColor } from "../colors";
-import { CoinData } from "@/types";
+import {secondTextColor, textColor} from "../colors";
+import {CoinData} from "@/types";
+import {fixDecimalsPart} from "../helpers";
 
 const RateBlock = styled.div`
   width: 100%;
@@ -47,7 +48,7 @@ export default function CoinRate({coin}: CoinPickerProps): JSX.Element {
         USD: {price},
       },
     } = coin;
-    return `1 ${symbol} = $ ${price.toFixed(2)}`;
+    return `1 ${symbol} = $ ${fixDecimalsPart(price, 2)}`;
   };
   return (
     <RateBlock>
