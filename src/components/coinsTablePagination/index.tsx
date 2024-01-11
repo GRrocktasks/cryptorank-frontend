@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {bgColor} from "../colors";
+import {bgColor, mainBlueColor} from "../colors";
 
 const Container = styled.div`
   background-color: ${bgColor};
@@ -19,10 +19,21 @@ const ButtonsWrapper = styled.div`
 
 const Button = styled.button`
   margin: 0 10px;
+  background-color: initial;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 0;
+  color: ${mainBlueColor};
 `;
 
 const SelectWrapper = styled.div`
   margin: 0 10px;
+`;
+
+const PageLabel = styled.div`
+  width: 20px;
+  text-align: center;
 `;
 
 type TablePaginationProps = {
@@ -53,8 +64,7 @@ export default function CoinsTablePagination({
         >
           {"<"}
         </Button>
-        <div>{page + 1}</div>
-
+        <PageLabel>{page + 1}</PageLabel>
         <Button
           style={{
             visibility: (page + 1) * rowsPerPage < count ? "visible" : "hidden",
